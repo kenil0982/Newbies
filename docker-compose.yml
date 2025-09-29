@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  api:
+    build: ./server
+    environment:
+      - PORT=4000
+      - MONGODB_URI=mongodb://mongo:27017/ecoquest
+      - JWT_ACCESS_SECRET=dev-access-secret
+      - JWT_REFRESH_SECRET=dev-refresh-secret
+      - CORS_ORIGIN=http://localhost:5173
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+volumes:
+  mongo_data:
+
